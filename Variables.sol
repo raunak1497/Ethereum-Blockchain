@@ -38,5 +38,9 @@ contract WorkingWithVariables{
     function setMyString(string memory _myString) public{
         myString = _myString;
     }
+
+    // function getBalance() public view returns(uint){
+    //     return address(this).balance;
+    // } 
 }
 

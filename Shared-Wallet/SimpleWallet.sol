@@ -2,7 +2,18 @@ pragma solidity ^0.6.7;
 
 contract Simplewallet{
     
-    function withdrawl(address payable  _to,uint _amount) public {
+    address public owner;
+    
+    constructor() public{
+        owner = msg.sender;
+    }
+    
+    modifier onlyOwner(){
+        require(owner == msg.sender,"You are not the owner");   
+        _;
+    }
+    
+    function withdrawMoney(address payable  _to,uint _amount) public onlyOwner {
         _to.transfer(_amount);
     } 
     

@@ -1,5 +1,26 @@
 pragma solidity 0.6.7;
 
+contract Ownable{
+    
+    address payable _owner;
+    
+    constructor() public {
+        _owner=msg.sender;
+    }
+    
+    function isOwner() public view returns(bool){
+        return (_owner==msg.sender);
+    }
+    
+    modifier onlyOwner() {
+        require(isOwner(),"You are not the owner");
+        _;
+    }
+    
+    
+}
+
+
 contract Item{
     uint public priceInWei;
     uint public index;
@@ -28,7 +49,7 @@ contract Item{
 }
 
 
-contract ItemManager{
+contract ItemManager is Ownable{
     
     enum supplyChainState{created , paid , delivered}
     
@@ -45,7 +66,7 @@ contract ItemManager{
     
     event SupplyChainStep(uint _itemIndex,uint _step,address itemAddress);
     
-    function createItem(string memory _identifier,uint _itemPrice) public {
+    function createItem(string memory _identifier,uint _itemPrice) public onlyOwner{
         
         Item item = new Item(this,_itemPrice,itemIndex);
         items[itemIndex]._item = item;
@@ -57,7 +78,7 @@ contract ItemManager{
         itemIndex++;
     }
     
-    function triggerPayment(uint _itemIndex) public payable {
+    function triggerPayment(uint _itemIndex) public payable onlyOwner{
         require(items[_itemIndex]._itemPrice <= msg.value, "Only full payment accepted");
         require(items[_itemIndex]._state == supplyChainState.created, "Item is further in the chain");
         items[_itemIndex]._state = supplyChainState.paid;
@@ -65,7 +86,7 @@ contract ItemManager{
         emit SupplyChainStep(_itemIndex,uint(items[_itemIndex]._state),address(items[_itemIndex]._item));
     }
     
-    function triggerDelivery(uint _itemIndex) public {
+    function triggerDelivery(uint _itemIndex) public onlyOwner{
         require(items[_itemIndex]._state == supplyChainState.paid, "Item is further in the chain");
         items[_itemIndex]._state = supplyChainState.delivered;
         

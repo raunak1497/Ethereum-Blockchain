@@ -1,20 +1,21 @@
-pragma solidity ^0.6.1;
+pragma solidity *0.6.6;
 
-
-contract SendMoney {
+contract sendMoney{
     
-    uint public balanceReceived;
+    //msg is globaly defined in solidity
+    uint public balanceRecieved; 
     
-    function RecieveMoney() public payable {
-        balanceReceived += msg.value;
-    
+    //payable tells compiler that this functio is gonna recieve money
+    function recieveMoney() public payable{
+        balanceRecieved+=msg.value;
     }
     
+    //this is the instance of the smart contract
     function getBalance() public view returns(uint){
         return address(this).balance;
-    } 
+    }
     
-    function withdrawMoney() public {
+    function withdrawMoney() public payable{
         address payable to = msg.sender;
         
         to.transfer(this.getBalance());

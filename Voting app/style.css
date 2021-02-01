@@ -1,0 +1,69 @@
+html, body{
+    margin: 0%;
+    padding: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: #222222;
+    color: white;
+    text-align: center;
+}
+
+h1{
+    padding: 20px;
+    
+}
+
+h2{
+    padding: 10px;
+    text-align: center;
+}
+
+table{
+    position: relative;
+    width: 50%;
+    left: 25%;
+    padding: 20px;
+    border-collapse: collapse;
+    font-size: 20px;
+}
+
+table *{
+    border: 2px solid black;
+    padding: 10px;
+}
+
+#tn{
+    font-size: 20px;
+    padding: 10px;
+}
+
+#btn{
+    padding: 30px;
+    position: relative;
+    width: 50%;
+    left: 25%;
+}
+
+button{
+    background-color:#337AFF; /* Green */
+    margin: 10px;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 14px 40px;
+  border-radius: 12px;
+}
+
+#final button{
+    margin-top: 20px;
+    background-color: black;
+}
+
+#final p{
+    font-size: 20px;
+}

@@ -17,36 +17,36 @@ contract SimpleVoting {
     
     address chairperson;
     
-    constructor public(){
+    constructor() public {
         chairperson=msg.sender;
         
-        candidates.push(candidate((
-            name : 'Trump',
-            NoOfVotes : 0;
-        )));
-        candidates.push(candidate((
-            name : 'Biden',
-            NoOfVotes : 0;
-        )));
+        candidates.push(candidate({
+            name : 'Coke',
+            NoOfVotes : 0 
+        }));
+        candidates.push(candidate({
+            name : 'Pepsi',
+            NoOfVotes : 0
+        }));
         
     }
     
     //function to cast vote to a candidate
     function castVote(uint candidateIndex) public{
-        require(!votes[sender].voted,'The voter has already voted');
         address sender = msg.sender;
+        require(!votes[sender].voted,'The voter has already voted');
         candidates[candidateIndex].NoOfVotes += 1;
         votes[sender].voted=true;
         votes[sender].vote=candidateIndex;
     }
     
     //function to get who voted for whom
-    function getVote(uint candidateIndex) public view return(uint) {
+    function getVote(uint candidateIndex) public view returns(uint) {
         return candidates[candidateIndex].NoOfVotes;
     }
     
     //declare winner
-    function getWinner() public view return(bytes32 winner) {
+    function getWinner() public view returns(bytes32 winner) {
         uint maxNoOfVotes;
         uint length =  candidates.length;
         for(uint i=0;i<length;i++){

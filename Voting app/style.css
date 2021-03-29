@@ -32,12 +32,12 @@ table *{
     padding: 10px;
 }
 
-#tn{
+#totalVotes{
     font-size: 20px;
     padding: 10px;
 }
 
-#btn{
+#selectionDiv{
     padding: 30px;
     position: relative;
     width: 50%;
@@ -59,11 +59,11 @@ button{
   border-radius: 12px;
 }
 
-#final button{
+#winnerDiv button{
     margin-top: 20px;
     background-color: black;
 }
 
-#final p{
+#winnerP{
     font-size: 20px;
 }

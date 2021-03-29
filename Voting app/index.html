@@ -1,38 +1,231 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>Voting</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <h1> Vote for a Better Tommorow </h1>
-  <div>
-    <h2> Here is what other people are saying </h2>
-    <table>
-        <tr> 
-            <th> </th>
-            <th> Donald Trump </th>
-            <th> Joe Biden</th>
-        </tr>
-        <tr> 
-            <th> Number of votes</th>
-            <td> 0</td>
-            <td> 0</td>
-        </tr>
-    </table>
-    <p id="tn" >Total turnout : </p>
-  </div>
-  <div id="btn"> 
-      <button>Trump</button>
-      <button>Biden</button>
-  </div>
-  <div id ="final" > 
-      <button > Announce Winner</button>
-      <p>
-          The next President of USA is 
-      </p>
-  </div>
+  <meta name="robots" content="noindex">
+
+  <meta name="robots" content="noindex">
+  <html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Voting Page</title>
+    <link rel="stylesheet"type="text/css" href="style.css">
+
+    <script src="./node_modules/web3/dist/web3.min.js"></script>
+  </head>
+  <body>
+    <h1>Which do you prefer, Coke or Pepsi</h1>
+    <div>
+      <h2> Here is what other people are saying:</h2>
+      <table>
+        <tr>
+          <th></th>
+          <th>Coke</th>
+          <th>Pepsi</th>
+        </tr> 
+        <tr>
+          <th>Number of votes</th>
+          <td id='cokeVotes'>0</td>
+          <td id='pepsiVotes'>0</td>
+        </tr> 
+      </table>
+      <p id='numVotesP'>Total number of votes:0</p>
+    </div>
+    <div id= 'selectionDiv'>
+      <button onclick='castVote(0)'>Coke</button>
+      <button onclick='castVote(1)'>Pepsi</button>
+    </div>
+    <div id='winnerDiv'>
+      <button onclick='announceWinner()'>Announce winner</button>
+      <p id='winnerP'>Winner is: Neither</p>
+    </div> 
+
+  <script src="./node_modules/web3/dist/web3.min.js"></script>
+  <script id="jsbin-javascript">
+
+  if (typeof web3 !='undefined'){
+    web3= new Web3(web3.currentProvider);
+
+  }else{
+    web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:8545/'));
+  }
+
+  //default account that starts up the new contract
+  web3.eth.defaultAccount=web3.eth.accounts[2];
+  
+  var voting = new web3.eth.Contract([
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "candidates",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "name",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "NoOfVotes",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "candidateIndex",
+          "type": "uint256"
+        }
+      ],
+      "name": "castVote",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "candidateIndex",
+          "type": "uint256"
+        }
+      ],
+      "name": "getVote",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getWinner",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "winner",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "votes",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "voted",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "vote",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+    ]);
+    var votingContract = voting.at('0x99F40661851B0945092eE17Ce560720d1bA02BB0');
+
+  console.log(votingContract);
+
+  var cokeVotesText = document.getElementById('cokeVotes');
+  var pepsiVotesText = document.getElementById('pepsiVotes');
+  var totalVotesP = document.getElementById('numVotesP');
+  var winnerP = document.getElementById('winnerP');
+  var selectionDiv = document.getElementById('selectionDiv');
+
+  var totalVotes = 0;
+  // var cokeVotes = 0;
+  // var pepsiVotes = 0;
+  // var voted = false;
+
+  displayVotes();
+
+  function displayVotes(){
+    // try{
+      var cokeVotes = votingContract.getVote(0);
+      var pepsiVotes = votingContract.getVote(1);
+      var totalVotes = cokeVotes + pepsiVotes;
+
+      cokeVotesText.innerHTML = cokeVotes.toString();
+      pepsiVotesText.innerHTML = pepsiVotes.toString();  
+      totalVotesP.innerHTML = 'Total turnout ' + totalVotes.toString(); 
+    // }
+    // catch(error){
+    //   alert("You have already Voted");
+    // }
+  }
+
+
+  function castVote(candidateIndex){
+    // try{
+      votingContract.castVote(candidateIndex);  
+    // }catch(error){
+      // alert("You have already Voted");
+    // }
+    
+    
+    // if(voted){
+      //     alert('You have already voted');
+      //     return;
+      // }
+      // voted=true;
+      // if(candidateIndex === 0 ){
+      //     cokeVotes +=1;
+      //     cokeVotesText.innerHTML = cokeVotes.toString();
+      // } else{
+      //     pepsiVotes +=1;
+      //     pepsiVotesText.innerHTML = pepsiVotes.toString();
+      // }
+      // totalVotes+=1;
+      // totalVotesP.innerHTML = 'Total turnout ' + totalVotes.toString();
+  }
+
+  function announceWinner() {
+      var winner = ' ';
+      if(cokeVotes>pepsiVotes){
+          winner = 'Coke';
+      }
+      else{
+          winner = 'Pepsi ';
+      }
+      winnerP.innerHTML = 'The Winner is ' + winner;
+      winnerP.style.display = 'block';
+      for(var i=0;i<2;i++)
+      {
+        selectionDiv.childNodes[i].disabled = true; 
+      }
+  }
+  </script>
 </body>
+
 </html>
+      
+  

@@ -30,6 +30,7 @@ contract ItemManager{
         require(items[_itemIndex]._state == SupplyChainState.Created, "Item is further in the chain");
         items[_itemIndex]._state = SupplyChainState.Paid;
         emit SupplyChainStep(itemIndex,uint(items[itemIndex]._state));
+        
     }
     
     function triggerDelivery(uint _itemIndex) public{
